@@ -240,7 +240,7 @@ def get_text(file_path):
             if attempt["recover"]:
                 # This recovery mechanism is sometimes crude, but it can be very
                 # effective in re-arranging mismatched tags.
-                parser = etree.XMLParser(recover=True)
+                parser = etree.XMLParser(recover=True, resolve_entities=False)
                 root = etree.fromstring(s, parser=parser)
             else:
                 # Normal case

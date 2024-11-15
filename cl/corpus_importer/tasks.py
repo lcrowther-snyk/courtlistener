@@ -99,6 +99,7 @@ from cl.search.models import (
     Tag,
 )
 from cl.search.tasks import add_items_to_solr
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -257,7 +258,7 @@ def download_recap_item(
     try:
         if os.path.isfile(location) and not clobber:
             raise IOError(f"    IOError: File already exists at {location}")
-        r = requests.get(
+        r = safe_requests.get(
             url,
             stream=True,
             timeout=60,

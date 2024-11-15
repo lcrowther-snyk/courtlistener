@@ -1,4 +1,3 @@
-import requests
 from django.core.mail import send_mail
 from django.urls import reverse
 from juriscraper.lib.string_utils import trunc
@@ -10,6 +9,7 @@ from cl.lib.types import EmailType
 from cl.visualizations.models import Referer
 from cl.visualizations.network_utils import new_title_for_viz
 from cl.visualizations.utils import emails
+from security import safe_requests
 
 
 def blacklisted_url(url):
@@ -50,7 +50,7 @@ def get_title(self, referer_id):
         return
 
     try:
-        r = requests.get(
+        r = safe_requests.get(
             referer.url,
             headers={"User-Agent": "CourtListener"},
             verify=False,  # Integrity of a referer's referent is not important.

@@ -1,8 +1,6 @@
 import re
 from datetime import datetime
 from typing import Set
-
-import requests
 from django.conf import settings
 from requests import RequestException
 from simplejson import JSONDecodeError
@@ -13,6 +11,7 @@ from cl.lib.celery_utils import CeleryThrottle
 from cl.lib.command_utils import VerboseCommand, logger
 from cl.scrapers.tasks import update_docket_info_iquery
 from cl.search.models import Court, Docket
+from security import safe_requests
 
 
 def get_docket_ids_missing_info(num_to_get: int) -> Set[int]:
@@ -35,7 +34,7 @@ def get_docket_ids(last_x_days: int) -> Set[int]:
     docket_ids = set()
     if hasattr(settings, "MATOMO_TOKEN"):
         try:
-            r = requests.get(
+            r = safe_requests.get(
                 settings.MATOMO_REPORT_URL,
                 timeout=10,
                 params={

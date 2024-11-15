@@ -1,8 +1,6 @@
 import os
 import pickle
 from collections import defaultdict
-
-import requests
 from django.conf import settings
 from django.utils.timezone import now
 
@@ -10,6 +8,7 @@ from cl.lib.command_utils import VerboseCommand, logger
 from cl.lib.scorched_utils import ExtraSolrInterface
 from cl.people_db.import_judges.courtid_levels import courtid2statelevel
 from cl.people_db.models import Person
+from security import safe_requests
 
 leveldict = {
     "H": "J",  # State Supreme Court
@@ -60,7 +59,7 @@ def make_dict_of_ftm_eids(use_pickle=True):
                 year=year,
             )
             logger.info(f"Getting url at: {url}")
-            data = requests.get(url, timeout=30).json()
+            data = safe_requests.get(url, timeout=30).json()
 
             if data["records"] == ["No Records"]:
                 logger.info(

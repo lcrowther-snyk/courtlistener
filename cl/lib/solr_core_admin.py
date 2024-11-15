@@ -3,10 +3,10 @@ import json
 from typing import Dict, List, Union, cast
 
 import lxml
-import requests
 from django.conf import settings
 from lxml.etree import _ElementTree
 from scorched.exc import SolrError
+from security import safe_requests
 
 
 def swap_solr_core(
@@ -25,7 +25,7 @@ def swap_solr_core(
         "core": current_core,
         "other": desired_core,
     }
-    r = requests.get(f"{url}/solr/admin/cores", params=params, timeout=30)
+    r = safe_requests.get(f"{url}/solr/admin/cores", params=params, timeout=30)
     if r.status_code != 200:
         print(
             "Problem swapping cores. Got status_code of %s. "
@@ -42,7 +42,7 @@ def get_solr_core_status(
         core_query = ""
     else:
         core_query = f"&core={core}"
-    r = requests.get(
+    r = safe_requests.get(
         f"{url}/solr/admin/cores?action=STATUS{core_query}",
         timeout=10,
     )
@@ -75,7 +75,7 @@ def get_term_frequency(
         "numTerms": str(count),
         "wt": "json",
     }
-    r = requests.get(f"{url}/solr/admin/luke", params=params, timeout=10)
+    r = safe_requests.get(f"{url}/solr/admin/luke", params=params, timeout=10)
     content_as_json = json.loads(r.content)
     if result_type == "list":
         if len(content_as_json["fields"]) == 0:

@@ -5,11 +5,11 @@ import json
 import os
 
 import internetarchive as ia
-import requests
 from django.conf import settings
 
 from cl.lib.command_utils import VerboseCommand, logger
 from cl.lib.utils import mkdir_p
+from security import safe_requests
 
 
 def get_from_ia(reporter, volume):
@@ -71,7 +71,7 @@ def get_from_ia(reporter, volume):
 
             logger.info("Capturing: %s", url)
             mkdir_p(directory)
-            data = requests.get(url, timeout=10).json()
+            data = safe_requests.get(url, timeout=10).json()
             with open(file_path, "w") as outfile:
                 json.dump(data, outfile, indent=2)
 

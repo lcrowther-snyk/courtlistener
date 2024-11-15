@@ -34,6 +34,7 @@ from cl.scrapers.transformer_extractor_utils import (
     generate_thumbnail,
     get_page_count,
 )
+from security import safe_requests
 
 
 def make_disclosure_key(data_id: str) -> str:
@@ -374,13 +375,13 @@ def generate_or_download_disclosure_as_pdf(
     """
     if pdf_url:
         logger.info(f"Downloading PDF: {pdf_url}")
-        return requests.get(pdf_url, timeout=60 * 20)
+        return safe_requests.get(pdf_url, timeout=60 * 20)
     elif data["disclosure_type"] == "jw":
         logger.info(f"Downloading JW PDF: {quote(data['url'], safe=':/')}")
-        return requests.get(data["url"], timeout=60 * 20)
+        return safe_requests.get(data["url"], timeout=60 * 20)
     elif data["disclosure_type"] == "jef":
         logger.info(f"Downloading JEF PDF: {quote(data['url'], safe=':/')}")
-        return requests.get(data["url"], timeout=60 * 20)
+        return safe_requests.get(data["url"], timeout=60 * 20)
     elif data["disclosure_type"] == "single":
         urls = [data["url"]]
     else:

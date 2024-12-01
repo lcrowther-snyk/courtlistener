@@ -21,3 +21,4 @@ for f in conf_files:
     )
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+SESSION_COOKIE_SECURE = True
